@@ -1,0 +1,44 @@
+{
+    "name": "discovery-service",
+    "version": "0.1.0",
+    "description": "",
+    "author": "Kieran Sutherland",
+    "main": "out/bin/serve.js",
+    "type": "module",
+    "keywords": [],
+    "license": "ISC",
+    "scripts": {
+        "start": "node out/bin/serve",
+        "dev": "npm run clean && tsc -w",
+        "lint": "eslint --ext=.js,.ts --cache .",
+        "clean": "rm -rf out",
+        "compile": "npm run clean && tsc",
+        "test": "NODE_ENV=test mocha",
+        "docs": "npm run docs:openapi && npm run docs:api",
+        "docs:openapi": "generate-openapi > openapi.json",
+        "docs:api": "generate-docs > API.md",
+        "preversion": "npm run lint && npm run compile",
+        "version": "npm run docs && git add openapi.json API.md",
+        "postversion": "git push origin $(git rev-parse --abbrev-ref HEAD) --tags"
+    },
+    "dependencies": {
+        "@ubio/framework": "^15.11.2",
+        "body-parser": "^1.20.3",
+        "dotenv": "^16.4.7",
+        "express": "^4.21.2",
+        "koa": "^2.15.3",
+        "mesh-ioc": "^3.4.0",
+        "mongodb": "^6.12.0"
+    },
+    "devDependencies": {
+        "@nodescript/eslint-config": "^2.0.3",
+        "@types/koa": "^2.15.0",
+        "@types/mongodb": "^4.0.7",
+        "@types/node": "^22.10.5",
+        "eslint": "^9.17.0",
+        "mocha": "^11.0.1",
+        "npm-run-all": "^4.1.5",
+        "ts-node-dev": "^2.0.0",
+        "typescript": "^5.7.2"
+    }
+}
