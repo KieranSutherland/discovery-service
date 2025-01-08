@@ -22,7 +22,7 @@
         "postversion": "git push origin $(git rev-parse --abbrev-ref HEAD) --tags"
     },
     "dependencies": {
-        "@ubio/framework": "^15.11.2",
+        "@ubio/framework": "15.5.3",
         "body-parser": "^1.20.3",
         "dotenv": "^16.4.7",
         "express": "^4.21.2",
