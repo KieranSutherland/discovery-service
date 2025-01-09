@@ -7,11 +7,15 @@ This is a RESTful discovery service that tracks heartbeat messages from various 
 ### Prerequisites
 
 - Docker
-- Setup a `.env` file with `HEARTBEAT_EXPIRY_IN_MINUTES=??` where `??` equal to how many minutes you want the instance expiry to be set to.
+- Setup a `.env` file with `HEARTBEAT_EXPIRY_IN_MINUTES` and (optionally) `MONGO_URL`: 
+```
+HEARTBEAT_EXPIRY_IN_MINUTES - required - how many minutes you want the instance expiry to be set to.
+MONGO_URL - optional - custom MongoDB URI if you want to override the default database.
+``` 
 
 Run the following command: `docker-compose up`
 
-This will start a Node server on port 3000 and a MongoDB server on port 27017.
+This will start a `localhost` Node server on port `8080`. This is the endpoint to direct requests to.
 
 ## Endpoints
 
@@ -28,7 +32,7 @@ This will start a Node server on port 3000 and a MongoDB server on port 27017.
   - `id` (string, UUID format): The unique identifier for the instance.
 
 - **Body Parameters**:
-  - `meta` (object): Metadata associated with the instance.
+  - `meta` (object, optional): Metadata associated with the instance.
 
 #### Responses
 
@@ -57,9 +61,39 @@ This will start a Node server on port 3000 and a MongoDB server on port 27017.
 
 #### Responses
 
-- **204 No Content**: Indicates successful deletion of the instance.
+- **200 OK**: Indicates successful deletion of the instance.
+    - **Schema**:
+    ```json
+        {
+            "group": "string",
+            "instances": "number",
+            "createdAt": "number",
+            "lastUpdatedAt": "number"
+        }
+    ```
 
-### 3. Get Group Instances
+### 3. Get Instances
+
+- **Method**: `GET`
+- **Path**: `/`
+- **Description**: Retrieves all instances.
+
+#### Responses
+
+- **200 OK**: Returns an array of instances.
+  - **Schema**: 
+    ```json
+    [
+        {
+            "group": "string",
+            "instances": "number",
+            "createdAt": "number",
+            "lastUpdatedAt": "number"
+        }
+    ]
+    ```
+
+### 4. Get Group Instances
 
 - **Method**: `GET`
 - **Path**: `/{group}`

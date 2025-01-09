@@ -21,7 +21,7 @@ export class InstanceRouter extends Router {
         group: string,
         @PathParam('id', { schema: { type: 'string', format: 'uuid' } })
         id: string,
-        @BodyParam('meta', { schema: { type: 'object' } })
+        @BodyParam('meta', { schema: { type: 'object', }, required: false })
         meta: object
     ): Promise<Instance> {
         return await this.instanceService.registerInstance({
@@ -32,15 +32,35 @@ export class InstanceRouter extends Router {
     }
 
     @Delete({
-        path: '/{group}/{id}'
+        path: '/{group}/{id}',
+        responses: {
+            200: {
+                schema: INSTANCE_SCHEMA.schema
+            }
+        }
     })
     async unregisterInstance(
         @PathParam('group', { schema: { type: 'string' } })
         group: string,
         @PathParam('id', { schema: { type: 'string', format: 'uuid' } })
         id: string
-    ): Promise<void> {
-        await this.instanceService.unregisterInstance({ id, group });
+    ): Promise<Instance> {
+        return this.instanceService.unregisterInstance({ id, group });
+    }
+
+    @Get({
+        path: '/',
+        responses: {
+            200: {
+                schema: {
+                    type: 'array',
+                    items: INSTANCE_SCHEMA.schema
+                }
+            }
+        }
+    })
+    async getInstances(): Promise<Instance[]> {
+        return await this.instanceService.getInstances({});
     }
 
     @Get({
@@ -57,6 +77,6 @@ export class InstanceRouter extends Router {
     async getGroupInstances(
         @PathParam('group', { schema: { type: 'string' } }) group: string
     ): Promise<Instance[]> {
-        return await this.instanceService.getInstances({group});
+        return await this.instanceService.getInstances({ group });
     }
 }

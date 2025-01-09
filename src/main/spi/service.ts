@@ -18,17 +18,20 @@ export interface GetGroupInstancesParams {
     group: string;
 }
 
+export interface StartCleanupJobParams {
+    /**
+     * The maximum time an instance can not be updated for before it is considered expired, in minutes.
+     */
+    expiryTimeInMinutes: number;
+}
+
 export abstract class Service {
 
     constructor(expiryTimeInMinutes: number) {
-        setInterval(async () => {
-            try {
-                await this.cleanupExpiredInstances(expiryTimeInMinutes);
-                console.log('Expired instances cleanup completed.');
-            } catch (error) {
-                console.error('Error during cleanup of expired instances:', error);
-            }
-        }, expiryTimeInMinutes * 60 * 1000);
+        if (!expiryTimeInMinutes) {
+            throw new Error('No expiry time has been declared.')
+        }
+        this.startCleanupJob({ expiryTimeInMinutes });
     }
 
     /**
@@ -53,8 +56,8 @@ export abstract class Service {
     abstract unregisterInstance(params: DeleteInstanceParams): Promise<Instance>;
 
     /**
-     * Unregister all instances that have an updated time longer than the maximum expiry time.
-     * @param expiryTimeInMinutes The maximum time an instance can not be updated for before it is considered expired, in minutes.
+     * Starts a re-ocurring job to unregister all instances that have an updated time longer than the maximum expiry time.
+     * @param params The params for the cleanup job.
      */
-    abstract cleanupExpiredInstances(expiryTimeInMinutes: number): Promise<void>;
+    abstract startCleanupJob(params: StartCleanupJobParams): void;
 }
