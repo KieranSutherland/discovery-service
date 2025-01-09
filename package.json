@@ -13,7 +13,7 @@
         "lint": "eslint --ext=.js,.ts --cache .",
         "clean": "rm -rf out",
         "compile": "npm run clean && tsc",
-        "test": "npm run compile && cross-env NODE_ENV=test dotenv -e .env.test -- mocha 'out/**/*test.js",
+        "test": "npm run compile && cross-env NODE_ENV=test dotenv -e .env.test -- mocha 'out/**/*test.js'",
         "docs": "npm run docs:openapi && npm run docs:api",
         "docs:openapi": "generate-openapi > openapi.json",
         "docs:api": "generate-docs > API.md",
